@@ -1,0 +1,143 @@
+@using EcoSphere.Core.Models
+@{
+    var currentUser = ViewBag.CurrentUser as User;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EcoSphere</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="@(currentUser != null && currentUser.Role == "User" ? "portal-layout" : "")">
+
+    @if (currentUser != null)
+    {
+        @if (currentUser.Role == "Admin")
+        {
+            <!-- Sidebar Navigation for Admin -->
+            <div class="sidebar">
+                <a href="/Dashboard/Index" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🌱</div>
+                    <span>EcoSphere</span>
+                </a>
+
+                <ul class="sidebar-menu">
+                    <li class="sidebar-menu-title">Genel</li>
+                    <li>
+                        <a href="/Dashboard/Index" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                            <span>📊</span> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-title">Yönetim Paneli</li>
+                    <li>
+                        <a href="/Admin/SustainabilityGoal" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SustainabilityGoal" ? "active" : "")">
+                            <span>🎯</span> Hedefler
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/EcoCertificate" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "EcoCertificate" ? "active" : "")">
+                            <span>📜</span> Sertifikalar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/SustainabilityAudit" class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SustainabilityAudit" ? "active" : "")">
+                            <span>🔍</span> Denetimler
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-user-name" title="@currentUser.FullName">👤 @currentUser.FullName</div>
+                    <div class="sidebar-user-role">💼 Yönetici / @currentUser.Department</div>
+                    <a href="/Account/Logout" class="sidebar-logout">
+                        <span>🚪</span> Çıkış Yap
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content Area for Admin -->
+            <div class="main-wrapper">
+                @RenderBody()
+            </div>
+        }
+        else
+        {
+            <!-- Top Navbar Navigation for User Portal (Consumer Frontend feel) -->
+            <div class="portal-navbar">
+                <div class="portal-navbar-container">
+                    <a href="/Dashboard/Index" class="portal-logo">
+                        <span class="portal-logo-icon">🌱</span>
+                        <span class="portal-logo-text">EcoSphere</span>
+                    </a>
+
+                    <ul class="portal-nav-menu">
+                        <li>
+                            <a href="/Dashboard/Index" class="portal-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">📊 Genel Bakış</a>
+                        </li>
+                        <li>
+                            <a href="/User/EnergyConsumption" class="portal-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "EnergyConsumption" ? "active" : "")">⚡ Enerji Kayıtlarım</a>
+                        </li>
+                        <li>
+                            <a href="/User/WasteManagement" class="portal-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "WasteManagement" ? "active" : "")">♻️ Atık Kayıtlarım</a>
+                        </li>
+                    </ul>
+
+                    <div class="portal-user-section">
+                        <div class="portal-user-info">
+                            <span class="portal-user-name">👤 @currentUser.FullName</span>
+                            <span class="portal-user-dept">💼 @currentUser.Department</span>
+                        </div>
+                        <a href="/Account/Logout" class="portal-logout-btn">🚪 Çıkış</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Centered Container for User Portal Content -->
+            <div class="portal-wrapper">
+                <div class="portal-container">
+                    @RenderBody()
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- Auth Layout -->
+        <div style="width: 100%;">
+            @RenderBody()
+        </div>
+    }
+
+    <!-- Global Image Modal for Enlargeable Images -->
+    <div id="globalImageModal" class="image-modal">
+        <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+        <img class="image-modal-content" id="imgModalTarget" src="">
+    </div>
+
+    <script>
+        function openImageModal(src) {
+            var modal = document.getElementById("globalImageModal");
+            var modalImg = document.getElementById("imgModalTarget");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeImageModal() {
+            var modal = document.getElementById("globalImageModal");
+            modal.style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            var modal = document.getElementById("globalImageModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

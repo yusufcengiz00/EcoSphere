@@ -1,0 +1,58 @@
+@model EcoSphere.Core.Models.EnergyConsumption
+@{
+    ViewData["Title"] = "Kayıt Düzenle";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Tüketim Kaydını Düzenle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Tüketim miktarını güncelleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/User/EnergyConsumption" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/User/EnergyConsumption/Edit">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label class="form-label-styled">Enerji / Tüketim Tipi</label>
+            <select id="typeSelect" name="ConsumptionType" class="form-select-styled" onchange="updateUnit()">
+                <!option value="Elektrik" @(Model.ConsumptionType == "Elektrik" ? "selected" : "")>Elektrik (Aydınlatma, Makineler vb.)</!option>
+                <!option value="Doğalgaz" @(Model.ConsumptionType == "Doğalgaz" ? "selected" : "")>Doğalgaz (Isınma vb.)</!option>
+                <!option value="Yakıt" @(Model.ConsumptionType == "Yakıt" ? "selected" : "")>Yakıt (Şirket Araçları, Jeneratör vb.)</!option>
+            </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Tüketim Miktarı</label>
+                <input type="number" step="any" name="Quantity" class="form-input-styled" value="@Model.Quantity" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Ölçü Birimi</label>
+                <input type="text" id="unitInput" name="Unit" class="form-input-styled" value="@Model.Unit" readonly style="cursor: not-allowed;" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Değişiklikleri Kaydet
+        </button>
+    </form>
+</div>
+
+<script>
+    function updateUnit() {
+        var select = document.getElementById("typeSelect");
+        var unitInput = document.getElementById("unitInput");
+        if (select.value === "Elektrik") {
+            unitInput.value = "kWh";
+        } else if (select.value === "Doğalgaz") {
+            unitInput.value = "m3";
+        } else if (select.value === "Yakıt") {
+            unitInput.value = "Litre";
+        }
+    }
+</script>

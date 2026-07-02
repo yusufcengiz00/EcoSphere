@@ -1,0 +1,70 @@
+@model EcoSphere.Core.Models.EcoCertificate
+@{
+    ViewData["Title"] = "Sertifikayı Düzenle";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Sertifikayı Düzenle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Sertifika bilgilerini ve görselini güncelleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/Admin/EcoCertificate" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/Admin/EcoCertificate/Edit" enctype="multipart/form-data">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label class="form-label-styled">Sertifika Adı</label>
+            <input type="text" name="CertificateName" class="form-input-styled" value="@Model.CertificateName" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Veren Kurum / Kuruluş</label>
+            <input type="text" name="IssuingOrganization" class="form-input-styled" value="@Model.IssuingOrganization" required autocomplete="off" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Veriliş Tarihi</label>
+                <input type="date" name="IssueDate" class="form-input-styled" value="@Model.IssueDate.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Geçerlilik Tarihi</label>
+                <input type="date" name="ExpiryDate" class="form-input-styled" value="@Model.ExpiryDate.ToString("yyyy-MM-dd")" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Mevcut Sertifika Görseli</label>
+            <div style="margin-bottom: 12px;">
+                @if (!string.IsNullOrEmpty(Model.CertificateImagePath))
+                {
+                    <img src="@Model.CertificateImagePath" style="max-width: 150px; border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openImageModal('@Model.CertificateImagePath')" title="Büyütmek için tıklayın" />
+                }
+                else
+                {
+                    <span style="color: var(--text-muted); font-size: 13px; font-style: italic;">Görsel yüklenmemiş.</span>
+                }
+            </div>
+            <label class="form-label-styled">Sertifika Görsel Belgesini Değiştir</label>
+            <input type="file" name="certificateImage" class="form-input-styled" accept="image/*" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Durum</label>
+            <select name="Status" class="form-select-styled">
+                <!option value="Geçerli" @(Model.Status == "Geçerli" ? "selected" : "")>Geçerli</!option>
+                <!option value="Yenileme Bekliyor" @(Model.Status == "Yenileme Bekliyor" ? "selected" : "")>Yenileme Bekliyor</!option>
+                <!option value="Süresi Doldu" @(Model.Status == "Süresi Doldu" ? "selected" : "")>Süresi Doldu</!option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Değişiklikleri Kaydet
+        </button>
+    </form>
+</div>

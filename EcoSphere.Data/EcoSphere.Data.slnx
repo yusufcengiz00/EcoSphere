@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../EcoSphere.Core/EcoSphere.Core.csproj" />
+  <Project Path="../EcoSphere.MVC/EcoSphere.MVC.csproj" />
+  <Project Path="EcoSphere.Data.csproj" />
+</Solution>

@@ -1,0 +1,129 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-logo">🌱</div>
+            <h1 class="auth-title">EcoSphere</h1>
+            <p class="auth-subtitle">Sürdürülebilirlik Portalı Giriş Paneli</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="auth-alert">
+                ⚠️ @ViewBag.Error
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="auth-alert">
+                ⚠️ @TempData["Error"]
+            </div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="auth-alert" style="background: rgba(16, 185, 129, 0.2); border-color: var(--primary-color); color: #a7f3d0;">
+                ✅ @TempData["Success"]
+            </div>
+        }
+
+        <form method="post" action="/Account/Login">
+            <div class="form-group">
+                <label for="username" class="form-label">KULLANICI ADI</label>
+                <input type="text" id="username" name="username" class="form-input" placeholder="örn. admin veya user" required autocomplete="off" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label for="password" class="form-label">ŞİFRE</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required />
+            </div>
+
+            <!-- Beni Hatırla & Şifremi Unuttum Flex Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 13px;">
+                <label style="display: flex; align-items: center; gap: 8px; color: #94a3b8; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="rememberMe" style="accent-color: var(--primary-color); cursor: pointer;" />
+                    Beni Hatırla
+                </label>
+                <a href="javascript:void(0)" onclick="openForgotModal()" style="color: #94a3b8; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='#94a3b8'">Şifremi Unuttum</a>
+            </div>
+
+            <button type="submit" class="auth-btn">Giriş Yap</button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center; font-size: 13px; margin-bottom: 10px;">
+            <span style="color: #94a3b8;">Hesabınız yok mu?</span>
+            <a href="/Account/Register" style="color: var(--primary-color); font-weight: 600; text-decoration: none; margin-left: 5px;">Kayıt Olun</a>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal (Şifremi Unuttum Modalı) -->
+<div id="forgotPasswordModal" class="image-modal" style="display: none; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);">
+    <div class="auth-card" style="position: relative; max-width: 420px; width: 90%; margin: 0 auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);">
+        <span style="position: absolute; top: 16px; right: 16px; color: #94a3b8; font-size: 24px; font-weight: bold; cursor: pointer; line-height: 1;" onclick="closeForgotModal()">&times;</span>
+        <div class="auth-header" style="margin-bottom: 24px;">
+            <div class="auth-logo" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2);">🔒</div>
+            <h2 style="font-size: 20px; font-weight: 700; color: white; margin: 8px 0 0 0;">Şifremi Unuttum</h2>
+            <p style="color: #94a3b8; font-size: 12.5px; margin-top: 4px;">Bilgilerinizi doğrulayarak şifrenizi sıfırlayın.</p>
+        </div>
+        
+        <form method="post" action="/Account/ForgotPassword">
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="forgotUsername" class="form-label" style="font-size: 11px;">KULLANICI ADI</label>
+                <input type="text" id="forgotUsername" name="forgotUsername" class="form-input" style="padding: 10px;" required autocomplete="off" />
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="forgotFullName" class="form-label" style="font-size: 11px;">AD SOYAD</label>
+                <input type="text" id="forgotFullName" name="forgotFullName" class="form-input" style="padding: 10px;" required autocomplete="off" />
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="forgotNewPassword" class="form-label" style="font-size: 11px;">YENİ ŞİFRE</label>
+                <input type="password" id="forgotNewPassword" name="forgotNewPassword" class="form-input" style="padding: 10px;" required />
+            </div>
+            <button type="submit" class="auth-btn" style="background: #3b82f6; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);">Şifreyi Güncelle</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Remember Me (Beni Hatırla) LocalStorage Logic
+    document.addEventListener("DOMContentLoaded", function () {
+        var rememberedUser = localStorage.getItem("ecoSphereRememberedUser");
+        var usernameField = document.getElementById("username");
+        var rememberCheckbox = document.getElementById("rememberMe");
+
+        if (rememberedUser && usernameField && rememberCheckbox) {
+            usernameField.value = rememberedUser;
+            rememberCheckbox.checked = true;
+        }
+
+        var loginForm = document.querySelector("form[action='/Account/Login']");
+        if (loginForm) {
+            loginForm.addEventListener("submit", function () {
+                if (rememberCheckbox.checked) {
+                    localStorage.setItem("ecoSphereRememberedUser", usernameField.value);
+                } else {
+                    localStorage.removeItem("ecoSphereRememberedUser");
+                }
+            });
+        }
+    });
+
+    // Modal Operations (Modal Açıp Kapatma)
+    function openForgotModal() {
+        var modal = document.getElementById("forgotPasswordModal");
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    }
+
+    function closeForgotModal() {
+        var modal = document.getElementById("forgotPasswordModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>

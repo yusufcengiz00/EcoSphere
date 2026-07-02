@@ -1,0 +1,58 @@
+@model EcoSphere.Core.Models.EcoCertificate
+@{
+    ViewData["Title"] = "Yeni Sertifika Ekle";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Yeni Sertifika Ekle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Sertifika detaylarını girip taranmış görselini yükleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/Admin/EcoCertificate" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/Admin/EcoCertificate/Create" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label-styled">Sertifika Adı</label>
+            <input type="text" name="CertificateName" class="form-input-styled" placeholder="örn. ISO 14001 Çevre Yönetim Sistemi" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Veren Kurum / Kuruluş</label>
+            <input type="text" name="IssuingOrganization" class="form-input-styled" placeholder="örn. TSE veya WWF Türkiye" required autocomplete="off" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Veriliş Tarihi</label>
+                <input type="date" name="IssueDate" class="form-input-styled" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Geçerlilik Tarihi</label>
+                <input type="date" name="ExpiryDate" class="form-input-styled" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Sertifika Görsel Belgesi</label>
+            <input type="file" name="certificateImage" class="form-input-styled" accept="image/*" />
+            <small style="color: var(--text-muted); font-size: 11px; display: block; margin-top: 4px;">Desteklenen biçimler: JPG, PNG, GIF, WEBP</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Durum</label>
+            <select name="Status" class="form-select-styled">
+                <option value="Geçerli">Geçerli</option>
+                <option value="Yenileme Bekliyor">Yenileme Bekliyor</option>
+                <option value="Süresi Doldu">Süresi Doldu</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Sertifikayı Kaydet
+        </button>
+    </form>
+</div>

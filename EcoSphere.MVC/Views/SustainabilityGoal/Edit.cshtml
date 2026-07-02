@@ -1,0 +1,66 @@
+@model EcoSphere.Core.Models.SustainabilityGoal
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hedefi Düzenle";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Hedefi Düzenle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Hedef verilerini güncelleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/SustainabilityGoal" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/SustainabilityGoal/Edit">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label class="form-label-styled">Hedef Başlığı</label>
+            <input type="text" name="Title" class="form-input-styled" value="@Model.Title" required autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Hedef Metrik</label>
+            <input type="text" name="TargetMetric" class="form-input-styled" value="@Model.TargetMetric" required autocomplete="off" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Hedef Değer</label>
+                <input type="number" step="any" name="TargetValue" class="form-input-styled" value="@Model.TargetValue" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Mevcut Değer</label>
+                <input type="number" step="any" name="CurrentValue" class="form-input-styled" value="@Model.CurrentValue" required />
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Birim</label>
+                <input type="text" name="Unit" class="form-input-styled" value="@Model.Unit" required autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Hedef Tarih</label>
+                <input type="date" name="TargetDate" class="form-input-styled" value="@Model.TargetDate.ToString("yyyy-MM-dd")" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Durum</label>
+            <select name="Status" class="form-select-styled">
+                <!option value="Aktif" @(Model.Status == "Aktif" ? "selected" : "")>Aktif</!option>
+                <!option value="Tamamlandı" @(Model.Status == "Tamamlandı" ? "selected" : "")>Tamamlandı</!option>
+                <!option value="Başarısız" @(Model.Status == "Başarısız" ? "selected" : "")>Başarısız</!option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Değişiklikleri Kaydet
+        </button>
+    </form>
+</div>

@@ -1,0 +1,51 @@
+@model EcoSphere.Core.Models.WasteManagement
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yeni Atık Kaydı";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Yeni Atık Kaydı Ekle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Atık detaylarını girip atık fişini/makbuzunu yükleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/WasteManagement" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/WasteManagement/Create" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label-styled">Atık Türü</label>
+            <select name="WasteType" class="form-select-styled">
+                <option value="Plastik">Plastik</option>
+                <option value="Kağıt">Kağıt</option>
+                <option value="Cam">Cam</option>
+                <option value="Organik">Organik / Yemek</option>
+                <option value="Elektronik">Elektronik Atık (E-Waste)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Atık Ağırlığı (kg)</label>
+            <input type="number" step="any" name="WeightKg" class="form-input-styled" placeholder="örn. 45.5" required />
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 15px; margin-bottom: 20px;">
+            <input type="checkbox" id="isRecycled" name="IsRecycled" value="true" style="width: 18px; height: 18px; cursor: pointer;" />
+            <input type="hidden" name="IsRecycled" value="false" /> <!-- Fallback value for unchecked checkboxes in MVC binding -->
+            <label for="isRecycled" style="font-size: 14px; font-weight: 500; cursor: pointer;">Geri dönüşüm tesisine teslim edildi</label>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Atık Teslim Fişi / Makbuzu</label>
+            <input type="file" name="receiptImage" class="form-input-styled" accept="image/*" />
+            <small style="color: var(--text-muted); font-size: 11px; display: block; margin-top: 4px;">Desteklenen biçimler: JPG, PNG, GIF, WEBP</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Kayıt Oluştur
+        </button>
+    </form>
+</div>

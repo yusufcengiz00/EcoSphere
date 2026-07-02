@@ -1,0 +1,44 @@
+## Ignore Visual Studio Temporary Files and Build Outputs
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userresourcecode
+*.useroverride
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bin/
+obj/
+
+# Visual Studio cache directory
+.vs/
+
+# Rider cache directory
+.idea/
+
+# Local database files
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+
+# Web publishing / publishing outputs
+*.publish.xml
+*.pubxml
+*.pubxml.user
+
+# Serilog / log files
+Logs/
+*.log
+
+# AppData user-specific configs
+.gemini/
+.agents/

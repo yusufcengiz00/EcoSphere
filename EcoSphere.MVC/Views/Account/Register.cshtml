@@ -1,0 +1,143 @@
+@model EcoSphere.Core.Models.User
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<div class="auth-wrapper" id="registerWrapper" style="transition: all 0.4s ease;">
+    <div class="auth-card" style="max-width: 500px; transition: all 0.4s ease;" id="registerCard">
+        <div class="auth-header">
+            <div class="auth-logo" id="registerLogo">🌱</div>
+            <h1 class="auth-title">EcoSphere'e Katılın</h1>
+            <p class="auth-subtitle" id="registerSubtitle">Çevre ve Sürdürülebilirlik Kayıt Portalı</p>
+        </div>
+
+        <!-- Two Tabs for Different Account Designs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 24px; background: rgba(15, 23, 42, 0.4); padding: 4px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <button type="button" id="tabUser" class="auth-btn" style="flex: 1; padding: 10px; font-size: 13px; background: var(--primary-color); box-shadow: none;" onclick="switchDesign('User')">
+                👷 Çalışan Kaydı
+            </button>
+            <button type="button" id="tabAdmin" class="auth-btn" style="flex: 1; padding: 10px; font-size: 13px; background: transparent; color: #94a3b8; box-shadow: none;" onclick="switchDesign('Admin')">
+                🛡️ Yönetici Kaydı
+            </button>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="auth-alert">
+                ⚠️ @ViewBag.Error
+            </div>
+        }
+
+        <form method="post" action="/Account/Register">
+            <!-- Hidden Role Binder -->
+            <input type="hidden" id="roleInput" name="Role" value="User" />
+
+            <div class="form-group">
+                <label class="form-label" id="labelFullName">AD SOYAD</label>
+                <input type="text" name="FullName" class="form-input" placeholder="Adınızı ve soyadınızı girin" required autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">KULLANICI ADI</label>
+                <input type="text" name="Username" class="form-input" placeholder="Benzersiz bir kullanıcı adı" required autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">ŞİFRE</label>
+                <input type="password" name="Password" class="form-input" placeholder="••••••••" required />
+            </div>
+
+            <!-- User-Specific Field (Department Selection) -->
+            <div class="form-group" id="deptGroup" style="transition: all 0.3s ease;">
+                <label class="form-label">DEPARTMAN</label>
+                <select name="Department" class="form-input" style="background: rgba(15, 23, 42, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <option value="Üretim">Üretim & Fabrika</option>
+                    <option value="Lojistik">Lojistik & Sevkiyat</option>
+                    <option value="Bilgi Teknolojileri">Bilgi Teknolojileri (IT)</option>
+                    <option value="Pazarlama">Pazarlama & İletişim</option>
+                    <option value="İnsan Kaynakları">İnsan Kaynakları (HR)</option>
+                </select>
+            </div>
+
+            <!-- Admin-Specific Field (Security Admin Code) -->
+            <div class="form-group" id="adminCodeGroup" style="display: none; opacity: 0; transition: all 0.3s ease;">
+                <label class="form-label" style="color: #f87171;">YÖNETİCİ YETKİLENDİRME KODU</label>
+                <input type="text" name="adminCode" class="form-input" placeholder="Örn. ECO-2026" style="border-color: rgba(239, 68, 68, 0.3);" />
+                <small style="color: #fca5a5; font-size: 11px; display: block; margin-top: 4px;">Admin kaydı için şirket güvenlik kodunu girin.</small>
+            </div>
+
+            <button type="submit" class="auth-btn" id="submitBtn" style="margin-top: 10px;">Çalışan Olarak Kaydol</button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center; font-size: 13px;">
+            <span style="color: #94a3b8;">Zaten hesabınız var mı?</span>
+            <a href="/Account/Login" style="color: var(--primary-color); font-weight: 600; text-decoration: none; margin-left: 5px;">Giriş Yapın</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchDesign(role) {
+        var wrapper = document.getElementById("registerWrapper");
+        var card = document.getElementById("registerCard");
+        var logo = document.getElementById("registerLogo");
+        var subtitle = document.getElementById("registerSubtitle");
+        var tabUser = document.getElementById("tabUser");
+        var tabAdmin = document.getElementById("tabAdmin");
+        var roleInput = document.getElementById("roleInput");
+        var deptGroup = document.getElementById("deptGroup");
+        var adminCodeGroup = document.getElementById("adminCodeGroup");
+        var submitBtn = document.getElementById("submitBtn");
+
+        roleInput.value = role;
+
+        if (role === 'Admin') {
+            // Switch to Admin Design (Slate Blue / Authoritative Carbon theme)
+            wrapper.style.background = "radial-gradient(circle at top left, #1e1b4b 0%, #0f172a 50%, #020617 100%)";
+            card.style.borderColor = "rgba(139, 92, 246, 0.2)";
+            logo.innerHTML = "🛡️";
+            logo.style.background = "#6366f1"; // Violet
+            logo.style.boxShadow = "0 0 20px rgba(99, 102, 241, 0.6)";
+            subtitle.innerHTML = "Sürdürülebilirlik Yöneticisi Yetki Kaydı";
+            
+            tabAdmin.style.background = "#6366f1";
+            tabAdmin.style.color = "white";
+            tabUser.style.background = "transparent";
+            tabUser.style.color = "#94a3b8";
+
+            // Toggle fields
+            deptGroup.style.display = "none";
+            adminCodeGroup.style.display = "block";
+            setTimeout(function() {
+                adminCodeGroup.style.opacity = "1";
+            }, 50);
+
+            submitBtn.innerHTML = "Yönetici Olarak Kaydol";
+            submitBtn.style.background = "#6366f1";
+            submitBtn.style.boxShadow = "0 4px 6px -1px rgba(99, 102, 241, 0.3)";
+        } else {
+            // Switch to User Design (Emerald Green / Clean energy theme)
+            wrapper.style.background = "radial-gradient(circle at top left, #0f172a 0%, #1e293b 40%, #020617 100%)";
+            card.style.borderColor = "rgba(255, 255, 255, 0.1)";
+            logo.innerHTML = "🌱";
+            logo.style.background = "#10b981"; // Emerald
+            logo.style.boxShadow = "0 0 20px rgba(16, 185, 129, 0.5)";
+            subtitle.innerHTML = "Çevre ve Sürdürülebilirlik Kayıt Portalı";
+
+            tabUser.style.background = "var(--primary-color)";
+            tabUser.style.color = "white";
+            tabAdmin.style.background = "transparent";
+            tabAdmin.style.color = "#94a3b8";
+
+            // Toggle fields
+            adminCodeGroup.style.display = "none";
+            adminCodeGroup.style.opacity = "0";
+            deptGroup.style.display = "block";
+
+            submitBtn.innerHTML = "Çalışan Olarak Kaydol";
+            submitBtn.style.background = "var(--primary-color)";
+            submitBtn.style.boxShadow = "0 4px 6px -1px rgba(16, 185, 129, 0.3)";
+        }
+    }
+</script>

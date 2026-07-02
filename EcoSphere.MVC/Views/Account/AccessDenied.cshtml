@@ -1,0 +1,18 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yetkisiz Erişim";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="text-align: center;">
+        <div class="auth-logo" style="background: var(--danger); box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);">🚫</div>
+        <h1 class="auth-title" style="color: #fca5a5;">Yetkisiz Erişim</h1>
+        <p class="auth-subtitle" style="margin-top: 10px; margin-bottom: 30px; color: #94a3b8; font-size: 15px;">
+            Bu sayfayı görüntülemek için yetkiniz bulunmamaktadır. Admin paneline sadece yöneticiler erişebilir.
+        </p>
+
+        <a href="/Dashboard" class="auth-btn" style="text-decoration: none; display: block; text-align: center;">
+            Dashboard'a Dön
+        </a>
+    </div>
+</div>

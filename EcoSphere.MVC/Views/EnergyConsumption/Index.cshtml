@@ -1,0 +1,58 @@
+@model IEnumerable<EcoSphere.Core.Models.EnergyConsumption>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Enerji Tüketim Kayıtları";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Enerji Tüketim Kayıtları (User)</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Tesisimizde harcanan enerji kaynaklarının kayıt listesi</p>
+    </div>
+    <div class="page-actions">
+        <a href="/EnergyConsumption/Create" class="btn btn-primary">
+            <span>➕</span> Yeni Tüketim Ekle
+        </a>
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Kayıt ID</th>
+                    <th>Tüketim Kaynağı</th>
+                    <th>Miktar</th>
+                    <th>Ölçü Birimi</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>Hesaplanan CO2 Karşılığı</th>
+                    <th style="text-align: right;">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>#@item.Id</td>
+                        <td><strong>@item.ConsumptionType</strong></td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Unit</td>
+                        <td>@item.DateLogged.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            <span class="badge badge-danger">@item.CO2Equivalent kg CO2</span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="display: inline-flex; gap: 8px; justify-content: flex-end;">
+                                <a href="/EnergyConsumption/Edit/@item.Id" class="btn btn-outline btn-sm">🖊️ Düzenle</a>
+                                <form method="post" action="/EnergyConsumption/Delete/@item.Id" onsubmit="return confirm('Bu tüketim kaydını silmek istediğinize emin misiniz?');" style="margin:0;">
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Sil</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

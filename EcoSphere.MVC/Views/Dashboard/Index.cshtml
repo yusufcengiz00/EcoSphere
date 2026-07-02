@@ -1,0 +1,381 @@
+@using EcoSphere.Core.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
+    var currentUser = ViewBag.CurrentUser as User;
+}
+
+@if (currentUser?.Role == "Admin")
+{
+    <!-- ADMIN DASHBOARD (Yönetim Paneli Görünümü) -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Sürdürülebilirlik Yönetim Paneli</h1>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Kurum genelindeki sürdürülebilirlik verileri ve yönetim hedefleri</p>
+        </div>
+        <div class="page-actions">
+            <a href="/Dashboard/DownloadExcel" class="btn btn-outline">
+                <span>📊</span> Excel İndir
+            </a>
+            <a href="/Dashboard/DownloadPdf" class="btn btn-primary">
+                <span>📄</span> PDF Raporu İndir
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <span>TOPLAM KARBON SALINIMI</span>
+                <div class="stat-icon green">💨</div>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalCO2 kg</div>
+                <div class="stat-desc">Hesaplanan CO2 Karşılığı</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <span>TOPLAM ATIK MİKTARI</span>
+                <div class="stat-icon blue">📦</div>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalWaste kg</div>
+                <div class="stat-desc">Bertaraf edilen katı atıklar</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <span>GERİ DÖNÜŞÜM ORANI</span>
+                <div class="stat-icon purple">♻️</div>
+            </div>
+            <div>
+                <div class="stat-value">%@ViewBag.RecyclingRate</div>
+                <div class="stat-desc">Geri dönüştürülen atık yüzdesi</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <span>HEDEFLER</span>
+                <div class="stat-icon green">🎯</div>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.AchievedGoalsCount / @ViewBag.TotalGoalsCount</div>
+                <div class="stat-desc">Gerçekleşen şirket hedefleri</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid" style="margin-top: 24px;">
+        <!-- Sustainability Goals Card -->
+        <div class="content-card">
+            <div class="content-header">
+                <h2 class="content-title">Aktif Sürdürülebilirlik Hedefleri</h2>
+                <a href="/Admin/SustainabilityGoal" class="btn btn-outline btn-sm">Tümünü Yönet</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Hedef</th>
+                            <th>Metrik</th>
+                            <th>İlerleme</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var goal in (ViewBag.RecentGoals as List<SustainabilityGoal>) ?? new List<SustainabilityGoal>())
+                        {
+                            <tr>
+                                <td><strong>@goal.Title</strong></td>
+                                <td>@goal.TargetMetric</td>
+                                <td>@goal.CurrentValue / @goal.TargetValue @goal.Unit</td>
+                                <td>@goal.TargetDate.ToString("dd.MM.yyyy")</td>
+                                <td>
+                                    <span class="badge @(goal.Status == "Tamamlandı" ? "badge-success" : goal.Status == "Başarısız" ? "badge-danger" : "badge-warning")">
+                                        @goal.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Eco Certificates Card -->
+        <div class="content-card">
+            <div class="content-header">
+                <h2 class="content-title">Çevre Sertifikaları</h2>
+                <a href="/Admin/EcoCertificate" class="btn btn-outline btn-sm">Yönet</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Sertifika</th>
+                            <th>Veren Kurum</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cert in (ViewBag.RecentCertificates as List<EcoCertificate>) ?? new List<EcoCertificate>())
+                        {
+                            <tr>
+                                <td><strong>@cert.CertificateName</strong></td>
+                                <td>@cert.IssuingOrganization</td>
+                                <td>
+                                    <span class="badge @(cert.Status == "Geçerli" ? "badge-success" : cert.Status == "Yenileme Bekliyor" ? "badge-warning" : "badge-danger")">
+                                        @cert.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audits Card -->
+    <div class="content-card" style="margin-top: 24px;">
+        <div class="content-header">
+            <h2 class="content-title">Son Çevre Denetimleri</h2>
+            <a href="/Admin/SustainabilityAudit" class="btn btn-outline btn-sm">Tümünü Yönet</a>
+        </div>
+        <div class="table-wrapper">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Departman</th>
+                        <th>Denetçi</th>
+                        <th>Tarih</th>
+                        <th>Puan</th>
+                        <th>Bulgu Özet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var audit in (ViewBag.RecentAudits as List<SustainabilityAudit>) ?? new List<SustainabilityAudit>())
+                    {
+                        <tr>
+                            <td><strong>@audit.DepartmentName</strong></td>
+                            <td>@audit.AuditorName</td>
+                            <td>@audit.AuditDate.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                <span class="badge @(audit.Score >= 80 ? "badge-success" : audit.Score >= 60 ? "badge-warning" : "badge-danger")">
+                                    @audit.Score / 100
+                                </span>
+                            </td>
+                            <td>@audit.Findings</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <!-- USER PORTAL (Normal Proje Frontend / Çalışan Görünümü) -->
+
+    <!-- Informative Site Explanation Banner (Dismissible) -->
+    <div id="infoBanner" class="portal-info-banner">
+        <div class="portal-info-banner-content">
+            <span class="portal-info-banner-icon">ℹ️</span>
+            <div>
+                <strong>EcoSphere Nedir? ne işe yarar?</strong>
+                <p>
+                    EcoSphere, kurumumuzun sürdürülebilirlik performansını ölçmek ve karbon ayak izini kontrol altına almak için geliştirilmiş modern bir portaldır. Bu panel üzerinden enerji tüketimlerinizi (elektrik, doğalgaz, yakıt) ve bertaraf edilen atıklarınızı teslim makbuzlarıyla birlikte sisteme işleyebilirsiniz. Girişini yaptığınız veriler anlık olarak karbon salınımına çevrilir ve kurumsal yeşil hedeflerimizin raporlanmasını sağlar.
+                </p>
+            </div>
+        </div>
+        <button type="button" class="portal-info-banner-close" onclick="dismissInfoBanner()">&times;</button>
+    </div>
+    
+    <!-- User Welcome Hero Section -->
+    <div class="portal-hero">
+        <div class="portal-hero-content">
+            <h1>Hoş Geldiniz, @currentUser?.FullName! 👋</h1>
+            <p>
+                Tesisimizin sürdürülebilirlik hedeflerine katkıda bulunmak için harcadığınız enerji kaynaklarını ve bertaraf edilen atıkları aşağıdan hızlıca bildirebilir veya mevcut kayıtlarınızı düzenleyebilirsiniz.
+            </p>
+        </div>
+        <div class="portal-hero-actions">
+            <a href="/Dashboard/DownloadExcel" class="btn btn-outline">
+                📊 Excel Çıktısı
+            </a>
+            <a href="/Dashboard/DownloadPdf" class="btn btn-primary">
+                📄 PDF Karne
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions Portal Grid (Hızlı CRUD Butonları) -->
+    <div class="portal-actions-grid">
+        
+        <!-- Energy Consumption Card -->
+        <div class="portal-action-card">
+            <div>
+                <div class="portal-action-card-header">
+                    <div>
+                        <span class="portal-action-card-tag">KAYNAK TÜKETİMİ</span>
+                        <h3 class="portal-action-card-title">⚡ Enerji Tüketim Girişi</h3>
+                    </div>
+                    <div class="portal-action-card-icon">⚡</div>
+                </div>
+                <p class="portal-action-card-desc">
+                    Elektrik (kWh), Doğalgaz (m³) veya yakıt tüketim miktarlarını girerek tesisimizin anlık karbon ayak izini hesaplayın.
+                </p>
+            </div>
+            <div class="portal-action-card-buttons">
+                <a href="/User/EnergyConsumption/Create" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                    ➕ Yeni Tüketim Ekle
+                </a>
+                <a href="/User/EnergyConsumption" class="btn btn-outline">
+                    Listeyi Gör
+                </a>
+            </div>
+        </div>
+
+        <!-- Waste Management Card -->
+        <div class="portal-action-card">
+            <div>
+                <div class="portal-action-card-header">
+                    <div>
+                        <span class="portal-action-card-tag">GERİ DÖNÜŞÜM & ATIK</span>
+                        <h3 class="portal-action-card-title">♻️ Atık Teslim Kaydı</h3>
+                    </div>
+                    <div class="portal-action-card-icon">♻️</div>
+                </div>
+                <p class="portal-action-card-desc">
+                    Bertaraf edilen veya geri dönüşüme gönderilen atık miktarlarını bildirin ve teslim fişi kanıt görselini yükleyin.
+                </p>
+            </div>
+            <div class="portal-action-card-buttons">
+                <a href="/User/WasteManagement/Create" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                    ➕ Yeni Atık Bildir
+                </a>
+                <a href="/User/WasteManagement" class="btn btn-outline">
+                    Listeyi Gör
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables for user logs (With Direct CRUD buttons in table rows!) -->
+    <div class="dashboard-grid">
+        
+        <!-- Energy logs table -->
+        <div class="content-card">
+            <div class="content-header">
+                <h2 class="content-title">Son Enerji Kayıtlarım</h2>
+                <a href="/User/EnergyConsumption" class="btn btn-outline btn-sm">Tümünü Yönet</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Kaynak</th>
+                            <th>Miktar</th>
+                            <th>Tarih</th>
+                            <th>CO2</th>
+                            <th style="text-align: right;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in (ViewBag.RecentEnergy as List<EnergyConsumption>) ?? new List<EnergyConsumption>())
+                        {
+                            <tr>
+                                <td><strong>@log.ConsumptionType</strong></td>
+                                <td>@log.Quantity @log.Unit</td>
+                                <td>@log.DateLogged.ToString("dd.MM.yyyy")</td>
+                                <td><span class="badge badge-danger" style="font-size: 11px;">@log.CO2Equivalent kg</span></td>
+                                <td style="text-align: right;">
+                                    <div style="display: inline-flex; gap: 6px; justify-content: flex-end;">
+                                        <a href="/User/EnergyConsumption/Edit/@log.Id" class="btn btn-outline btn-sm" style="padding: 4px 8px; font-size: 11px;">🖊️ Düzenle</a>
+                                        <form method="post" action="/User/EnergyConsumption/Delete/@log.Id" onsubmit="return confirm('Bu tüketim kaydını silmek istediğinize emin misiniz?');" style="margin:0;">
+                                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 11px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5;">🗑️ Sil</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Waste logs table -->
+        <div class="content-card">
+            <div class="content-header">
+                <h2 class="content-title">Son Atık Kayıtlarım</h2>
+                <a href="/User/WasteManagement" class="btn btn-outline btn-sm">Tümünü Yönet</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Tür</th>
+                            <th>Ağırlık</th>
+                            <th>Geri Dönüşüm</th>
+                            <th style="text-align: right;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in (ViewBag.RecentWaste as List<WasteManagement>) ?? new List<WasteManagement>())
+                        {
+                            <tr>
+                                <td><strong>@log.WasteType</strong></td>
+                                <td>@log.WeightKg kg</td>
+                                <td>
+                                    <span class="badge @(log.IsRecycled ? "badge-success" : "badge-warning")">
+                                        @(log.IsRecycled ? "Evet" : "Hayır")
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div style="display: inline-flex; gap: 6px; justify-content: flex-end;">
+                                        <a href="/User/WasteManagement/Edit/@log.Id" class="btn btn-outline btn-sm" style="padding: 4px 8px; font-size: 11px;">🖊️ Düzenle</a>
+                                        <form method="post" action="/User/WasteManagement/Delete/@log.Id" onsubmit="return confirm('Bu atık kaydını silmek istediğinize emin misiniz?');" style="margin:0;">
+                                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 8px; font-size: 11px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5;">🗑️ Sil</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function dismissInfoBanner() {
+            var banner = document.getElementById("infoBanner");
+            if (banner) {
+                banner.style.opacity = "0";
+                banner.style.transform = "translateY(-10px)";
+                setTimeout(function() {
+                    banner.style.display = "none";
+                }, 300);
+                localStorage.setItem("ecoSphereInfoDismissed", "true");
+            }
+        }
+
+        // Auto-hide on load if already dismissed
+        document.addEventListener("DOMContentLoaded", function() {
+            if (localStorage.getItem("ecoSphereInfoDismissed") === "true") {
+                var banner = document.getElementById("infoBanner");
+                if (banner) {
+                    banner.style.display = "none";
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,62 @@
+@model EcoSphere.Core.Models.SustainabilityAudit
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Denetimi Düzenle";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Denetimi Düzenle</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Denetim bulgularını güncelleyin</p>
+    </div>
+    <div class="page-actions">
+        <a href="/SustainabilityAudit" class="btn btn-outline">🎛️ Listeye Dön</a>
+    </div>
+</div>
+
+<div class="content-card form-card">
+    <form method="post" action="/SustainabilityAudit/Edit">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label class="form-label-styled">Denetlenen Departman</label>
+            <select name="DepartmentName" class="form-select-styled">
+                <!option value="Üretim Departmanı" @(Model.DepartmentName == "Üretim Departmanı" ? "selected" : "")>Üretim Departmanı</!option>
+                <!option value="Lojistik Departmanı" @(Model.DepartmentName == "Lojistik Departmanı" ? "selected" : "")>Lojistik Departmanı</!option>
+                <!option value="Pazarlama Departmanı" @(Model.DepartmentName == "Pazarlama Departmanı" ? "selected" : "")>Pazarlama Departmanı</!option>
+                <!option value="İnsan Kaynakları" @(Model.DepartmentName == "İnsan Kaynakları" ? "selected" : "")>İnsan Kaynakları</!option>
+                <!option value="Bilgi Teknolojileri" @(Model.DepartmentName == "Bilgi Teknolojileri" ? "selected" : "")>Bilgi Teknolojileri</!option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Denetçi Adı Soyadı</label>
+            <input type="text" name="AuditorName" class="form-input-styled" value="@Model.AuditorName" required autocomplete="off" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label class="form-label-styled">Denetim Tarihi</label>
+                <input type="date" name="AuditDate" class="form-input-styled" value="@Model.AuditDate.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label-styled">Denetim Skoru (1 - 100)</label>
+                <input type="number" min="1" max="100" name="Score" class="form-input-styled" value="@Model.Score" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Denetim Bulguları</label>
+            <textarea name="Findings" class="form-input-styled" rows="4" required>@Model.Findings</textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-styled">Önerilen Aksiyonlar</label>
+            <textarea name="Recommendations" class="form-input-styled" rows="4" required>@Model.Recommendations</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            Değişiklikleri Kaydet
+        </button>
+    </form>
+</div>
