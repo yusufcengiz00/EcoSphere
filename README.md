@@ -70,3 +70,63 @@ Proje, kurumsal yazılım standartlarına uygun olarak katmanlı mimari (N-Tier 
 *   **Çalışan (User):**
     *   Kullanıcı Adı: `user`
     *   Şifre: `user123`
+
+---
+
+## 📸 Uygulama Görselleri
+
+### 👤 Kullanıcı Portalı
+
+<p align="center">
+<img width="1873" height="1007" alt="image" src="https://github.com/user-attachments/assets/bd1f5664-add6-4ec2-a126-b2249a8c6559" />
+</p>
+
+---
+
+### 👥 Kullanıcı Portalı Enerji Kayıtları Yönetim Ekranı
+
+<p align="center">
+<img width="1157" height="688" alt="image" src="https://github.com/user-attachments/assets/720eebd6-56bb-422a-922c-220774ab485e" />
+</p>
+
+---
+
+### 👥 Kullanıcı Portalı Atık Yönetim Ekranı
+
+<p align="center">
+<img width="1152" height="495" alt="image" src="https://github.com/user-attachments/assets/7ce9c129-0e3c-4fe7-a272-23f8c13847f5" />
+</p>
+
+---
+
+### 🔐 Admin Panel
+
+<p align="center">
+<img width="1905" height="1010" alt="image" src="https://github.com/user-attachments/assets/87996561-756e-41e7-bb2c-d3e1162d9724" />
+</p>
+
+---
+
+### 🧾 Hedef Yönetimi Ekranı
+
+<p align="center">
+<img width="1631" height="743" alt="image" src="https://github.com/user-attachments/assets/2bd5b2ce-1809-4bfd-a00e-40a1ececed67" />
+</p>
+
+---
+
+
+### 🛒 Sertifika Yönetim Ekranı
+
+<p align="center">
+<img width="1637" height="752" alt="image" src="https://github.com/user-attachments/assets/8531cbd0-c8f0-4205-90c3-5410cadb6c6e" />
+</p>
+
+---
+
+### 📦 Denetim Yönetim Ekranı
+
+<p align="center">
+<img width="1637" height="747" alt="image" src="https://github.com/user-attachments/assets/ae5c431f-cb95-4e74-a90a-d6e9f939ec93" />
+</p>
+
